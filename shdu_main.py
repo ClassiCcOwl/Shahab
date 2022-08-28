@@ -105,7 +105,7 @@ def lesson_taker(entekhab_vahed_driver):
     vahed_id = 'ctl00_CH1_lblSumUnits'
     del_loop = [6 * Keys.BACKSPACE]
     
-    while(True):
+      while(True):
         for lessonCode in codes:
             print(lessonCode)
             WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.ID, vahed_id)))
@@ -118,14 +118,19 @@ def lesson_taker(entekhab_vahed_driver):
                 print(my_alert.text)
                 my_alert.accept()
                 WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, code_input_xpath))).send_keys(del_loop)
-
+            except TimeoutException:
+                driver.refresh()
             except:
-                WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.ID, vahed_id)))
-                vaheds_taken_after = int(driver.find_element(By.ID, vahed_id).text)
-                print(f"vaheds_taken_after:{vaheds_taken_after}  vaheds_taken_before :{vaheds_taken_before}")
-                if vaheds_taken_after > vaheds_taken_before :
-                    print(lessonCode , 'taken')
-                WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, code_input_xpath))).send_keys(del_loop)
+                try:
+                    WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.ID, vahed_id)))
+                    vaheds_taken_after = int(driver.find_element(By.ID, vahed_id).text)
+                    print(f"vaheds_taken_after:{vaheds_taken_after}  vaheds_taken_before :{vaheds_taken_before}")
+                    if vaheds_taken_after > vaheds_taken_before :
+                        print(lessonCode , 'taken')
+                    WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, code_input_xpath))).send_keys(del_loop)
+                except TimeoutException:
+                    driver.refresh()
+            
 
 def main_for_entekhab():
     home_driver = login()
